@@ -11,14 +11,10 @@ int pin11 = 11;                              //output of red led
 int array1[sample];                      //creates an array with number of elements equal to "sample"
 //more information about arrays http://arduino.cc/en/Reference/Array
 
-
 unsigned long averaging;         //the program uses this variable to store the sum of each array it makes
 
-
 void setup() {
-
   Serial.begin (9600);
-
 }
 
 void loop() {
@@ -29,8 +25,6 @@ void loop() {
   }                                                               //the averaging line is simply saying: add averaging to whatever is in array position i
   //averaging += array[i] is the same as averaging = averaging + array[i]
   //for more information about += http://arduino.cc/en/Reference/IncrementCompound
-
-
 
   val = averaging / sample;                   //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
 
