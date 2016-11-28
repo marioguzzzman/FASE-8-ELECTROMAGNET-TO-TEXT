@@ -4,7 +4,7 @@
 // Adapted from code by Denis Meyer (CallToPower)
 // Thanks to Mark Triant for the inspiring sample text
  
-String script = "gfhshsf";
+String script = "nadie sabe lo que tiene";
 int voiceIndex;
 int voiceSpeed;
  
@@ -55,6 +55,10 @@ static class TextToSpeech extends Object {
   static final String PRINCESS = "Princess";
   static final String VICKI = "Vicki";
   static final String VICTORIA = "Victoria";
+  
+   static final String PAULINA = "Paulina";
+  static final String AURELIE = "Aurelie";
+
  
   // novelty voices
   static final String ALBERT = "Albert";
@@ -74,10 +78,7 @@ static class TextToSpeech extends Object {
  
   // throw them in an array so we can iterate over them / pick at random
   static String[] voices = {
-    ALEX, BRUCE, FRED, JUNIOR, RALPH, AGNES, KATHY,
-    PRINCESS, VICKI, VICTORIA, ALBERT, BAD_NEWS, BAHH,
-    BELLS, BOING, BUBBLES, CELLOS, DERANGED, GOOD_NEWS,
-    HYSTERICAL, PIPE_ORGAN, TRINOIDS, WHISPER, ZARVOX
+    PAULINA, AURELIE
   };
  
   // this sends the "say" command to the terminal with the appropriate args
