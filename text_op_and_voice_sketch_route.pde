@@ -156,6 +156,6 @@ static class TextToSpeech extends Object {
   // Overload the say method so we can call it with fewer arguments and basic defaults
   static void say(String script) {
     // 200 seems like a resonable default speed
-    say(script, ALEX, 200);
+    //say(script, ALEX, 200);
   }
 }
