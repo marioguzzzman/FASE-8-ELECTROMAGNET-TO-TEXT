@@ -10,7 +10,13 @@
 
 //DIVS
 // let myDiv;
-// let myDivGen;
+// let myDivGen;\
+
+//Add processing serial
+
+//Add times
+
+//add lectura arduino
 
 
 //TEXT
@@ -27,13 +33,24 @@ let h;
 
 let textSpeed = 0;
 
-//Connectors text
-let text = [
-    'I think this is a '
-];
+//CREAR TEXTOS
+
+// TEXTOS
+let comodines = [ "electromagnético", "claridad", "técnica", "moral", "fábula", "luz", "mesura", "medida", "ciencia", "deber", "responsabilidad"]; 
+
+let textos_columnas = [ 
+  "lo que está en juego son los procedimientos", 
+  "aquellos que están fuera del palacio pueden ver lo que pasa dentro", 
+  "invasión permanente que instituya nuevas formas de hacer", 
+  "mantener abierto el espacio de la institución", 
+  "una superficie total de tres mil metros cuadrados", 
+  "el estilo de los edificios responde al neoclasicismo francés", 
+  "¿Qué es el Neoclasicismo?", 
+  "Cielito, ciclo que sí, digo cese la pendencia, ya reventó la coyunda, y viva la Independencia."]; 
 
 
-//SOUND
+// TEXT TO SPEECH
+
 // http://ability.nyu.edu/p5.js-speech/ 
 // https://github.com/IDMNYU/p5.js-speech
 var myVoice = new p5.Speech(); // new P5.Speech object
@@ -60,6 +77,10 @@ let voice = 'Google UK English Male';
 // Google 粤語（香港）
 // Google 國語（臺灣）
 
+//FROM PREVIOUS PROJECT FILE
+
+
+
 
 function preload() { 
 
@@ -84,20 +105,23 @@ function draw() {
     DoText();
     talk();
 
-    // ENABLE AUDIOCONTEXT REQUIREMENT FOR BROWSER
-    textAlign(CENTER);
-    fill(0);
-    if (getAudioContext().state !== 'running') {
-        text('click to start audio', width / 2, height / 2);
-    } else {
-        // text('audio is enabled', width/2, height/2);
-    }
+
+//PAST STRUCTURE
+
+    // // ENABLE AUDIOCONTEXT REQUIREMENT FOR BROWSER
+    // textAlign(CENTER);
+    // fill(0);
+    // if (getAudioContext().state !== 'running') {
+    //     text('click to start audio', width / 2, height / 2);
+    // } else {
+    //     // text('audio is enabled', width/2, height/2);
+    // }
 
 
-    if (resultsReady) {
+    // if (resultsReady) {
        
-        // console.log(rnnSub);
-    }
+    //     // console.log(rnnSub);
+    // }
 
 
 } //--------------END DRAW
@@ -125,14 +149,20 @@ function touchStarted() {
 
 
 
-//-----------------------------------------TALK
+//-----------------------------------------TALK // the text to speech class
 function talk() {
     myVoice.setVoice(voice); //change here
-    myVoice.speak(rnnSub);  // change here put text
+    myVoice.speak(text);  // change here put text
 
     myVoice.setRate(.8); // speed of speach
     myVoice.setPitch(.9);
     myVoice.setVolume(.5);
+
+    //add voice castellano
+    //add voice frances
+    // maybe change the pitch to generate different voices
+
+
 }
 
 
