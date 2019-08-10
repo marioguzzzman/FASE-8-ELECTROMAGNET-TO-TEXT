@@ -26,7 +26,7 @@ let resultsReady = false;
 //parameters for "terminal" text
 let terminalF;
 let subtitleF;
-let posXte
+let posXte;
 let posYtextT;
 let w;
 let h;
@@ -36,18 +36,7 @@ let textSpeed = 0;
 //CREAR TEXTOS
 
 // TEXTOS
-let comodines = [ "electromagnético", "claridad", "técnica", "moral", "fábula", "luz", "mesura", "medida", "ciencia", "deber", "responsabilidad"]; 
-
-let textos_columnas = [ 
-  "lo que está en juego son los procedimientos", 
-  "aquellos que están fuera del palacio pueden ver lo que pasa dentro", 
-  "invasión permanente que instituya nuevas formas de hacer", 
-  "mantener abierto el espacio de la institución", 
-  "una superficie total de tres mil metros cuadrados", 
-  "el estilo de los edificios responde al neoclasicismo francés", 
-  "¿Qué es el Neoclasicismo?", 
-  "Cielito, ciclo que sí, digo cese la pendencia, ya reventó la coyunda, y viva la Independencia."]; 
-
+let comodines = 'hello';
 
 // TEXT TO SPEECH
 
@@ -81,11 +70,6 @@ let voice = 'Google UK English Male';
 
 
 
-
-function preload() { 
-
-}
-
 function setup() {
 
     createCanvas(windowWidth, windowHeight);
@@ -100,10 +84,10 @@ function setup() {
 
 function draw() {
 
-    background(0, 50);
+    background(0);
 
-    DoText();
-    talk();
+    // DoText();
+    // talk();
 
 
 //PAST STRUCTURE
@@ -126,6 +110,23 @@ function draw() {
 
 } //--------------END DRAW
 
+
+//-----------------------------------------TALK // the text to speech class
+function talk() {
+    myVoice.setVoice(voice); //change here
+    myVoice.speak(comodines);  // change here put text
+
+    myVoice.setRate(.8); // speed of speach
+    myVoice.setPitch(.9);
+    myVoice.setVolume(.5);
+
+    //add voice castellano
+    //add voice frances
+    // maybe change the pitch to generate different voices
+
+
+}
+
 //--------------------------------------BACKGROUND SOUND
 //Use this function to enable sound in chrome.
 // https://p5js.org/reference/#/p5.sound/getAudioContext
@@ -146,25 +147,6 @@ function touchStarted() {
     }
     // sound1.loop();
 }
-
-
-
-//-----------------------------------------TALK // the text to speech class
-function talk() {
-    myVoice.setVoice(voice); //change here
-    myVoice.speak(text);  // change here put text
-
-    myVoice.setRate(.8); // speed of speach
-    myVoice.setPitch(.9);
-    myVoice.setVolume(.5);
-
-    //add voice castellano
-    //add voice frances
-    // maybe change the pitch to generate different voices
-
-
-}
-
 
 
 
