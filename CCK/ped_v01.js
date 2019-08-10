@@ -20,6 +20,7 @@
 
 
 //TEXT
+// https://creative-coding.decontextualize.com/intro-to-ritajs/
 
 // let resultsReady = false;
 
@@ -51,14 +52,14 @@ let textos_columnas = [
   "Cielito, ciclo que sí, digo cese la pendencia, ya reventó la coyunda, y viva la Independencia."
 ]; 
 
-// TEXT TO SPEECH
+    // TEXT TO SPEECH
 
 // http://ability.nyu.edu/p5.js-speech/ 
 // https://github.com/IDMNYU/p5.js-speech
-var myVoice = new p5.Speech(); // new P5.Speech object
+// let myVoice;
+let myVoice = new p5.Speech();
 let voice = 'Google français';
 let voicesX = ['Google français', 'Google español', 'Google español de Estados Unidos'];
-
 // LIST OF VOICES
 // Google Deutsch
 // Google US English
@@ -80,14 +81,12 @@ let voicesX = ['Google français', 'Google español', 'Google español de Estado
 // Google 粤語（香港）
 // Google 國語（臺灣）
 
-//FROM PREVIOUS PROJECT FILE
-
 
 
 function setup() {
 
     createCanvas(windowWidth, windowHeight);
-
+    // myVoice = new p5.Speech(); // new P5.Speech object
     
     // DO SOME DIVS
     // myDiv = createDiv('...'); //create only one Div so we can see only one result
@@ -99,22 +98,32 @@ function setup() {
 function draw() {
 
     background(0);
-    touchStarted();
-
-    // DoText();
-    talk();
+    // touchStarted();
 
 
 //PAST STRUCTURE
 
-    // // ENABLE AUDIOCONTEXT REQUIREMENT FOR BROWSER
-    // textAlign(CENTER);
-    // fill(0);
-    // if (getAudioContext().state !== 'running') {
-    //     text('click to start audio', width / 2, height / 2);
-    // } else {
-    //     // text('audio is enabled', width/2, height/2);
-    // }
+    //ENABLE AUDIOCONTEXT REQUIREMENT FOR BROWSER
+    textAlign(CENTER);
+    fill(255);
+    if (getAudioContext().state !== 'running') {
+        text('click to start audio', width / 2, height / 2);
+    } else {
+        // text('audio is enabled', width/2, height/2);
+        // voiceON();
+        // console.log('audioON');
+        myVoice.setVoice(voice); //change here
+        myVoice.speak(textos_columnas);  // change here put text
+
+        // talk();
+
+    }
+
+
+    // DoText();
+
+//    talk();
+
 
 
     // if (resultsReady) {
@@ -125,15 +134,27 @@ function draw() {
 
 } //--------------END DRAW
 
+function voiceON(){
+
+    console.log('voice');
+    // if in bounds:
+		
+            myVoice.setVoice(voice); // increment
+            myVoice.speak(textos_columnas);  // change here put text
+
+		
+}
+
 
 //-----------------------------------------TALK // the text to speech class
 function talk() {
+    console.log('talking...');
     myVoice.setVoice(voice); //change here
     myVoice.speak(textos_columnas);  // change here put text
 
-    myVoice.setRate(.8); // speed of speach
-    myVoice.setPitch(.5); //.9 es mas agudo,
-    myVoice.setVolume(.5);
+    myVoice.setRate(0.8); // speed of speach
+    myVoice.setPitch(0.5); //.9 es mas agudo,
+    myVoice.setVolume(0.5);
 
     // myVoice.setRate(.8); // speed of speach (.1 lento, .9 rapido)
 
