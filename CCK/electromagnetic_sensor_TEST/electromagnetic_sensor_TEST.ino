@@ -7,19 +7,19 @@
 #define sample 300                    //this is how many samples the device takes per reading
 //more information for #define http://arduino.cc/en/Reference/Define
 
-//int inPin0 = 0;                                  //analog 0
-int inPin1 = 1;                                  //analog 1
-int inPin2 = 2;                                  //analog 2
-int inPin3 = 3;                                  //analog 3
-int inPin4 = 4;                                  //analog 4
-int inPin5 = 5;                                  //analog 5
+//int inPin0 = 0;   //analog 0
+int inPin1 = 1;     //analog 1
+int inPin2 = 2;     //analog 2
+int inPin3 = 3;     //analog 3 //Using this
+int inPin4 = 4;     //analog 4
+int inPin5 = 5;     //analog 5 //Using this
 
-//int val0 = 0;                                         //where to store info from analog 0
-int val1 = 1;                                         //where to store info from analog 0
-int val2 = 2;                                         //where to store info from analog 0
-int val3 = 3;                                         //where to store info from analog 0
-int val4 = 4;                                         //where to store info from analog 0
-int val5 = 5;                                         //where to store info from analog 5
+//int val0 = 0;   //where to store info from analog 0
+int val1 = 1;     //where to store info from analog 0
+int val2 = 2;     //where to store info from analog 0
+int val3 = 3;     //where to store info from analog 3  //Using this
+int val4 = 4;     //where to store info from analog 0
+int val5 = 5;     //where to store info from analog 5  //Using this
 
 int pin11 = 11;                              //output of red led
 
@@ -69,11 +69,11 @@ void loop() {
 
 
 //  val0 = averaging0 / sample;    //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
-// val1 = averaging1 / sample;                   //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
-//  val2 = averaging2 / sample;                   //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
-  val3 = averaging3 / sample;                   //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
- // val4 = averaging4 / sample;                   //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
-  val5 = averaging5 / sample;                   //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
+// val1 = averaging1 / sample;     //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
+//  val2 = averaging2 / sample;    //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"  
+  val3 = averaging3 / sample;      //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
+ // val4 = averaging4 / sample;    //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
+  val5 = averaging5 / sample;      //here the program takes the sum of all numbers in array1, and divides by the number of elements "sample"
 
 //  val1 = map(val1, 0, 250, 0, 100);      //for more information about constrain http://arduino.cc/en/Reference/Constrain
 //  val2 = map(val2, 0, 250, 0, 100);      //for more information about constrain http://arduino.cc/en/Reference/Constrain
@@ -83,7 +83,6 @@ void loop() {
 
 
 //  val0 = constrain(val0, 0, 100);               //this constrains the variable value to between two numbers 0 and 100
-
 //  val1 = constrain(val1, 0, 100);               //this constrains the variable value to between two numbers 0 and 100
 //  val2 = constrain(val2, 0, 100);               //this constrains the variable value to between two numbers 0 and 100
   val3 = constrain(val3, 0, 100);               //this constrains the variable value to between two numbers 0 and 100

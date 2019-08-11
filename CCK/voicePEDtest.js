@@ -25,7 +25,7 @@ let serial; // variable to hold an instance of the serialport library
 // var portName = '/dev/cu.usbmodem1421';  // fill in your serial port name here
 let portName = '/dev/ttyACM0';  // For linux 
 // Set Arduino on Serial.begin(9600) to nor change the value of baudrate
-let inData;  // for incoming serial data
+let currentString;  // for incoming serial data
 
 //LECTURA ARDUINO
 let end = 10;
@@ -135,9 +135,9 @@ function draw() {
 // mousePressed(); auto repeat //Iterates in the word array. Test
 
 //TEST SERIAL
-background(0);
+background(0, 50);
   fill(255);
-  text("sensor value: " + SENSORS_VALUE_T0_DISPLAY, 30, 30);
+  text("sensor value: " + currentString, 30, 30);
 
 
 //PRE-V
@@ -297,7 +297,7 @@ function gotList(thelist) {
 
 // There is data available to work with from the serial port
 function gotData() {
-  var currentString = serial.readStringUntil("\r\n");
+    currentString = serial.readStringUntil("\r\n");
   console.log(currentString);
 }
 
