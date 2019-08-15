@@ -20,7 +20,22 @@
         // https://raw.githubusercontent.com/p5-serial/p5.serialport/master/lib/p5.serialport.js
 
 
+//TO RUN ON MARIO'S COMPUTER
+//1. Python server 
+// python3 -m http.server
+//2. Serial communication
+// run PATH
+// run command
+
+
+//TIMER 
+let time;
+let wait = 2000;
+let time2;
+let wait2 = 5000; //100000 // que mide este valor?
+
 //SERIAL
+// Reference:
 // https://itp.nyu.edu/physcomp/labs/labs-serial-communication/lab-serial-input-to-the-p5-js-ide/
 
 let serial; // variable to hold an instance of the serialport library
@@ -31,27 +46,24 @@ let portName = '/dev/ttyACM0';  // For linux
 let currentString;  // for incoming serial data
 
 //LECTURA ARDUINO
-let end = 10;
-let val0;
-let val1;   //numero del valor de EMF 
+let end = 10; // porque hasta 10?
+let val0;   // valor individual de lectura de EMF de las columnas
+let val1;   // valor individual de lectura de EMF de las columnas
 
 let serialEMF = []; //valor EMF en String (del Serial)
-let txt = Math.floor(Math.random(0, 8));
+// String serial; //valor EMF en String (del Serial) // pre-code
 
-let valores = []; //que hace esto?
+let valores = []; //valores EMF de ambas columnas // TODO: cambiar por EMFvalue
 
-let openPort; // no se si jalo
+let openPort; // no se si funca TODO:TESTEAR
 
-
-
-//timer
-let time;
-let wait = 2000;
-let time2;
-let wait2 = 5000; //100000 // que mide este valor?
 
 
 // TEXTOS
+
+// TODO: testear si funca lo del math floor
+let txt = Math.floor(Math.random(0, 8)); //txt asigna un texto a la lectura en voz alta si los valores son menores a 
+
 let comodines = [ 
     "electromagnético", "claridad", "técnica", "moral", "fábula", "luz", "mesura", "medida", "ciencia", "deber", "responsabilidad"
 ];
@@ -69,19 +81,12 @@ let textos_columnas = [
 
 
 //RITA
-let rs = new RiString();
-
+let rs = new RiString(); // main object
 let frase = new RiString();
 let frase2 = new RiString();
 let frase_say = new RiString();
 
-let say;
-let count;
-let voiceIndex;
-let voiceSpeed;
-
-
-valores = []; // que hace esto?
+let count; // contador de longitud de palabra, // RENAME TO WordLengthVal
 
 
 //VOICES
@@ -89,7 +94,14 @@ let iptr = 0; // a counter for the words - used for TESTING
 
 let myVoice = new p5.Speech(); // new P5.Speech object
 let voicesX = ['Google français', 'Google español', 'Google español de Estados Unidos'];
-    
+
+let voiceIndex;
+let voiceSpeed;
+
+
+// TEXT TO SPEECH
+let say;
+
 
 function setup() {
 createCanvas(500, 500);
@@ -138,10 +150,18 @@ createCanvas(500, 500);
 //   time2 = millis();//store the current time
 // ------------------   END SERIAL pre-v
 
-//TIME //was in setup
-time = millis();//store the current time  // where are these variables?
-time2 = millis();//store the current time // where are these variables?
+//TIME // Counter for triggering events
+time = millis(); // what event?
+time2 = millis(); // what evet?
 // console.log('time: ' + time );
+
+
+  /* TESTING PHRASES?
+  frase.removeChar(2);
+   frase.replaceChar(2,"h");
+   frase2 = frase.slice(1,3);
+   frase.replaceFirst(frase2, "cu");
+   */
 
 }
 
@@ -159,29 +179,24 @@ background(0, 50);
 
 //PRE-V
 
+// SET A DEFAULT TEXT TO SAY
+if (millis() - time2 >= wait2) {
+  txt = int(random(0, 8));
+  console.log("UPDATE: " + txt);
+  time2 = millis();//also update the stored time
+}
 //console.log("draw: " + txt);
 
-//Que hace este codigo?
-
-// console.log('time2: ' + time2);
-
-
-  if (millis() - time2 >= wait2) {
-    txt = int(random(0, 8));
-    console.log("UPDATE: " + txt);
-    time2 = millis();//also update the stored time
-  }
 
   //LECTURA SERIAL
   /*******************************************************/
 
   if (serial.available() > 0) {  //this works
     var data = serial.read();
-    ellipse(50,50,data,data); // para testear que recibimos data
+    ellipse(50,50,data,data); // display para testear que recibimos data
     // console.log('Entro a Lectura serial');
 
     // NO PUEDO HACER QUE FUNCIONE EL SPLIT DE LOS VALORES DEL SENSOR
-
 
     // if (serial != null) {
         // String[] a = split(serial, ',');
@@ -190,25 +205,66 @@ background(0, 50);
     //   let b = a.split(",");
     //   a.push(split(currentString, ','));
 
-    text("sensor value 1: " + a, 30, 80);
-    console.log('valores recibidos: ' +  a[0]);
+    text("sensor value 1: " + a, 30, 80); //no work
+    console.log('valores recibidos: ' +  a[0]); // no work
 
 
-    // val0 =int(float(trim(a[0])));
+    // val0 =int(float(trim(a[0]))); //trim and cast EMF value
     // //println("Col2: "+val0);
 
-    // val1 =int(float(trim(a[1])));
+    // val1 =int(float(trim(a[1])));  //trim and cast EMF value
     // //println("Col3: "+val1);
 
-    valores[0] = val0;
-    valores[1] = val1;
+    valores[0] = val0; // set value inside array values of EMF
+    valores[1] = val1; // set value inside array values of EMF
     console.log("valores: "+valores[0]+" "+valores[1]);
 
-    //CODIGO COLUMNA 1 
-    let columna = int(random(1, 2));
+    //LECTURA DE COLUMNAS
+    let columna = int(random(1, 2)); // test posiible error in asigning values in random
+    //change names of values to match column names
     leer_columna(columna, valores[columna]);
     //println("col: "+columna);
     // }
+
+    // TEST WITHOUT ARDUINO
+  } else {
+
+    let dummyValue1 = Math.floor(random(10, 80));
+    let dummyValue2 = Math.floor(random(10, 80));
+
+    ellipse(50,50,data,data); // display para testear que recibimos data
+    // console.log('Entro a Lectura serial');
+
+    // NO PUEDO HACER QUE FUNCIONE EL SPLIT DE LOS VALORES DEL SENSOR
+
+    // if (serial != null) {
+        // String[] a = split(serial, ',');
+
+      let a = currentString.split(",");
+    //   let b = a.split(",");
+    //   a.push(split(currentString, ','));
+
+    text("sensor value 1: " + a, 30, 80); //no work
+    console.log('valores recibidos: ' +  a[0]); // no work
+
+
+    // val0 =int(float(trim(a[0]))); //trim and cast EMF value
+    // //println("Col2: "+val0);
+
+    // val1 =int(float(trim(a[1])));  //trim and cast EMF value
+    // //println("Col3: "+val1);
+
+    valores[0] = val0; // set value inside array values of EMF
+    valores[1] = val1; // set value inside array values of EMF
+    console.log("valores: "+valores[0]+" "+valores[1]);
+
+    //LECTURA DE COLUMNAS
+    let columna = int(random(1, 2)); // test posiible error in asigning values in random
+    //change names of values to match column names
+    leer_columna(columna, valores[columna]);
+    //println("col: "+columna);
+
+
   }
 
 
@@ -234,24 +290,35 @@ function mousePressed()
 
 // cuanto mas campo magnetico menos se entiende
 function mix_text(rs, val) {
+//TODO: cambiar rs por fraseRS
+  
     let palabra = "";
-    let cont = rs.length();
-    //console.log (cont);
+    let cont = rs.length(); // longitud de la palabra
+    //console.log(cont);
+
+    //INSERTA CARACTERES
     if (val >= 30 && val < 40) {
-      palabra = rs.charAt(cont-1);
+      palabra = rs.charAt(cont-1); //Palabra = Elige un caracter = longitud de los caracteres menos 1. 
     } else 
-    if (val >= 40 && val < 60) {
-       let ran1 = Math.floor(Math.random(cont));
-       let ran2 = Math.floor(Math.random(cont));
-      if (ran1 != ran2) {
-        rs.replaceChar((cont-ran1), rs.charAt(ran2));
+
+    //INTERCAMBIA CARACTERES
+    if (val >= 40 && val < 60) { // si el valor es entre 40 y 60, intercambia elementos
+       let ran1 = Math.floor(Math.random(cont)); 
+       let ran2 = Math.floor(Math.random(cont)); 
+
+      if (ran1 != ran2) { // si son distintos intercambio las posiones,  reemplazo uno de los dos
+
+        rs.replaceChar((cont-ran1), rs.charAt(ran2)); //reemplazo (largo de palabra menos random 1, random 2 de la palabra misma)
       }
-      palabra = rs.text();
+      palabra = rs.text(); // palabra = palabra modificada
       console.log(palabra);
     //   println(palabra);
 
-    }  
-    if (val >=50) {
+    }  // --- END INTERCAMBIO CARACTERES 
+
+
+    // COMODIN DENTRO DE PALABRA
+    if (val >=50) { // mayor o igual que 50 inserta un comodin dentro de palabra 
       rs.insertWord( Math.floor(Math.random(5)), comodines[Math.floor(Math.random(5))]);
       palabra = rs.text();
 
@@ -259,7 +326,7 @@ function mix_text(rs, val) {
       if (cont>10) {
         palabra = rs.substring(0, 9);
       }
-    } 
+    } // --- END COMODIN DENTRO DE PALABRA  
   
     //console.log(palabra);
   
@@ -267,22 +334,32 @@ function mix_text(rs, val) {
   }
 
 
+  //MAIN FUNCTION TO MANAGE EMF READING AND TEXT GENERATION
   function leer_columna(col, val){
-    frase = new RiString(textos_columnas[txt]); //dice una frase de comlumnas partir de un numero random de text
-  
-    if (val > 30) {
-      say = mix_text(frase, val); //llamada a funcion mix_text
-      voiceSpeed = Math.floor(Math.random(30, 200));
-      frase_say = new RiString(say);
+    frase = new RiString(textos_columnas[txt]); // frase es igual al texto de una columna al azar
+
+    //TODO: cambiar frase por fraseRS
+
+   //MIX TEXT
+    if (val > 30) { //Si EMF es mayor que 30 entonces..
+      say = mix_text(frase, val); // Say es igual a la frase de las columnas + mix_text?
+
+      // Velocidad de la voz
+      // TODO: AGREGAR ACA INSTANCIA DE FUNCION DE VOZ 
+      voiceSpeed = Math.floor(Math.random(30, 200)); // TODO: testear que funcione
+      frase_say = new RiString(say); // Enunca la frase
       
-  
-      if (frase_say.length()>100) {
-        say = frase_say.substring(0, 100);
+      //Recorte de frase
+      if (frase_say.length()>100) { //Si la frase a decir es mayor que 100
+        say = frase_say.substring(0, 100); //Recorta la frase
       }
-      wait = frase_say.length()/10 * 800; // porue esta cuenta?
+
+      //No uniformidad de la lectura
+      wait = frase_say.length()/10 * 800; //tiempo para que la lectura no sea monotona = argo de la palabra entre 10*800, para no superponer lecturas.
       
-      //println(wait);
-    } else {
+      //console.log(wait);
+
+    } else {// Si el valor es mejor a 30 reseteamos columna
       //reset
       reset_columna(col);
     }
@@ -294,23 +371,23 @@ function mix_text(rs, val) {
     //   time = millis();//also update the stored time
     // }
 
+
+    // SPEAK EVERY CERTAIN AMOUNT OF TIME
     if (millis() - time >= wait) {
         myVoice.setVoice(Math.floor(random(voicesX.length)));
         myVoice.speak(say);
-        // Flata agregarle voice speed
+        // TODO: Flata agregarle voice speed
         console.log(say);
         time = millis();//also update the stored time
       }
 
+  } // END LEER COLUMNA
 
-
-
-  }
-
+  // SAY TEXT ACCORDING TO OUR DATA BASE
   function reset_columna(col) {
-    say = textos_columnas[txt];
+    say = textos_columnas[txt]; // guarda en say una de las frases
     voiceSpeed = 150;
-    wait = int(random(5000, 10000));
+    wait = int(random(5000, 10000)); // set wait
   }
 
 
