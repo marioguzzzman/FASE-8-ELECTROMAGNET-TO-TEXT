@@ -165,24 +165,37 @@ time2 = millis(); // what evet?
 
 }
 
+ //TEST
+ let dummyValue1;
+ let dummyValue2;
+ let dummyValueGen;
+
 
 function draw() {
 // TEST
 // mousePressed(); auto repeat //Iterates in the word array. Test
 
 //TEST SERIAL
+// background(0, 50);
+//   fill(255);
+//   text("sensor value: " + currentString, 30, 30);
+//   console.log('current string :' + currentString);
+
+
+//TEST SERIAL NON SERIAL
 background(0, 50);
   fill(255);
-  text("sensor value: " + currentString, 30, 30);
+  text("sensor value: " + dummyValueGen, 30, 30);
 //   console.log('current string :' + currentString);
+
 
 
 //PRE-V
 
 // SET A DEFAULT TEXT TO SAY
 if (millis() - time2 >= wait2) {
-  txt = int(random(0, 8));
-  console.log("UPDATE: " + txt);
+  txt = Math.floor(random(0, 8));
+  console.log("UPDATE txt No: " + txt);
   time2 = millis();//also update the stored time
 }
 //console.log("draw: " + txt);
@@ -194,7 +207,7 @@ if (millis() - time2 >= wait2) {
   if (serial.available() > 0) {  //this works
     var data = serial.read();
     ellipse(50,50,data,data); // display para testear que recibimos data
-    // console.log('Entro a Lectura serial');
+    console.log('Entro a Lectura serial');
 
     // NO PUEDO HACER QUE FUNCIONE EL SPLIT DE LOS VALORES DEL SENSOR
 
@@ -205,8 +218,8 @@ if (millis() - time2 >= wait2) {
     //   let b = a.split(",");
     //   a.push(split(currentString, ','));
 
-    text("sensor value 1: " + a, 30, 80); //no work
-    console.log('valores recibidos: ' +  a[0]); // no work
+    // text("sensor value 1: " + a, 30, 80); //no work
+    // console.log('valores recibidos: ' +  a[0]); // no work
 
 
     // val0 =int(float(trim(a[0]))); //trim and cast EMF value
@@ -217,7 +230,7 @@ if (millis() - time2 >= wait2) {
 
     valores[0] = val0; // set value inside array values of EMF
     valores[1] = val1; // set value inside array values of EMF
-    console.log("valores: "+valores[0]+" "+valores[1]);
+    console.log("valores: " + valores[0] + " " + valores[1]);
 
     //LECTURA DE COLUMNAS
     let columna = int(random(1, 2)); // test posiible error in asigning values in random
@@ -229,34 +242,43 @@ if (millis() - time2 >= wait2) {
     // TEST WITHOUT ARDUINO
   } else {
 
-    let dummyValue1 = Math.floor(random(10, 80));
-    let dummyValue2 = Math.floor(random(10, 80));
-
-    ellipse(50,50,data,data); // display para testear que recibimos data
-    // console.log('Entro a Lectura serial');
-
-    // NO PUEDO HACER QUE FUNCIONE EL SPLIT DE LOS VALORES DEL SENSOR
-
-    // if (serial != null) {
-        // String[] a = split(serial, ',');
-
-      let a = currentString.split(",");
-    //   let b = a.split(",");
-    //   a.push(split(currentString, ','));
-
-    text("sensor value 1: " + a, 30, 80); //no work
-    console.log('valores recibidos: ' +  a[0]); // no work
+        // console.log('Entro a Lectura test');
 
 
-    // val0 =int(float(trim(a[0]))); //trim and cast EMF value
-    // //println("Col2: "+val0);
+    waitTest = 500;
+
+    if (millis() - time2 >= waitTest) {
+
+      // if (frameCount == 15) {
+
+      //TEST
+    dummyValue1 = Math.floor(random(0, 100));
+    dummyValue2 = Math.floor(random(0, 100));
+
+    dummyValueGen = dummyValue1 + "," + dummyValue2;
+
+
+  }  //end wait
+
+    text("sensor value dummy: " + dummyValueGen, 30, 80); //no work
+
+    let a = String(dummyValueGen);
+    // let a = '123,909';
+    a = a.split(",");
+
+    console.log("val0: " + a[0]);
+
+
+
+    // val0 =trim(a[0]); //trim and cast EMF value
+    // console.log("Col0: " + val0);
 
     // val1 =int(float(trim(a[1])));  //trim and cast EMF value
     // //println("Col3: "+val1);
 
-    valores[0] = val0; // set value inside array values of EMF
-    valores[1] = val1; // set value inside array values of EMF
-    console.log("valores: "+valores[0]+" "+valores[1]);
+    // valores[0] = val0; // set value inside array values of EMF
+    // valores[1] = val1; // set value inside array values of EMF
+    // console.log("valores: "+valores[0]+" "+valores[1]);
 
     //LECTURA DE COLUMNAS
     let columna = int(random(1, 2)); // test posiible error in asigning values in random
@@ -377,7 +399,7 @@ function mix_text(rs, val) {
         myVoice.setVoice(Math.floor(random(voicesX.length)));
         myVoice.speak(say);
         // TODO: Flata agregarle voice speed
-        console.log(say);
+        console.log("speak_amount_time: " + say);
         time = millis();//also update the stored time
       }
 
