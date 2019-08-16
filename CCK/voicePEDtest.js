@@ -37,17 +37,14 @@ let wait2 = 5000; //100000 // que mide este valor?
 // Reference:
 // https://itp.nyu.edu/physcomp/labs/labs-serial-communication/lab-serial-input-to-the-p5-js-ide/
 
-let serial; // variable to hold an instance of the serialport library
-// var portName = '/dev/cu.usbmodem1421';  // fill in your serial port name here
+// var portName = '/dev/cu.usbmodem1421';  // fill in your serial port name here Arduino
 let portName = '/dev/ttyACM0'; // For linux 
 // Set Arduino on Serial.begin(9600) to nor change the value of baudrate
 // let portName = '10.17.34.128'; // fill in your own IP address in place of the one shown here
-let currentString; // for incoming serial data
+let currentString; // for incoming serial data from Arduino
 
 //LECTURA ARDUINO
 let end = 10; // porque hasta 10?
-let val0; // valor individual de lectura de EMF de las columnas
-let val1; // valor individual de lectura de EMF de las columnas
 
 let EMFrawValues;
 // String serial; //valor EMF en String (del Serial) // pre-code
@@ -57,17 +54,23 @@ let eachColumnEMF = [];
 let openPort; // no se si funca TODO:TESTEAR
 
 
+//PHANTOM READING
+let phatonValue0;
+let phatonValue1;
+let phantonValueGen;
+
 
 // TEXTOS
 
 // TODO: testear si funca lo del math floor
 let txtNumber = Math.floor(Math.random(0, 8)); //txtNumber asigna un texto a la lectura en voz alta si los valores son menores a 
+//nota, fuera del loop parece necesario agregar Math.random(x,x). Dentro del loop funciona con random(x,x).
 
-let comodines = [
+let palabras_clave = [
   "electromagnético", "claridad", "técnica", "moral", "fábula", "luz", "mesura", "medida", "ciencia", "deber", "responsabilidad"
 ];
 
-let textos_columnas = [
+let discurso_columnas = [
   "lo que está en juego son los procedimientos",
   "aquellos que están fuera del palacio pueden ver lo que pasa dentro",
   "invasión permanente que instituya nuevas formas de hacer",
@@ -80,13 +83,9 @@ let textos_columnas = [
 
 
 //RITA
-// let rs = new RiString(); // main object
 let fraseRS = new RiString(); // main object
-// let frase2 = new RiString();
-// let NewFraseRS;
-let frase_say = new RiString();
-
-let fraseRSLength; // contador de longitud de palabra
+let frase_sayRS = new RiString();
+let fraseRSLength; // contador de longitud de la frase
 
 
 //VOICES
@@ -100,13 +99,14 @@ let voiceSpeed;
 
 
 // TEXT TO SPEECH
-let say;
+let sayPalabraMix;
+
+
+//DISPLAY TEXT
 
 
 function setup() {
   createCanvas(500, 500);
-
-  frameRate(15);
 
   // -------------------SERIAL P5js
 
@@ -153,10 +153,8 @@ function setup() {
   // ------------------   END SERIAL pre-v
 
   //TIME // Counter for triggering events
-  time = millis(); // what event?
-  time2 = millis(); // what evet?
-  // console.log('time: ' + time );
-
+  time = millis(); 
+  time2 = millis(); 
 
   /* TESTING PHRASES?
   fraseRS.removeChar(2);
@@ -164,14 +162,7 @@ function setup() {
    frase2 = fraseRS.slice(1,3);
    fraseRS.replaceFirst(frase2, "cu");
    */
-
 }
-
-//TEST
-let dummyValue1;
-let dummyValue2;
-let dummyValueGen;
-
 
 function draw() {
   // TEST
@@ -188,7 +179,6 @@ function draw() {
   background(0, 50);
   fill(255);
   //   console.log('current string :' + currentString);
-
 
 
   //PRE-V
@@ -242,14 +232,14 @@ function draw() {
     //TEST
     if (millis() - time2 >= waitTest) { // create dummy values
       // if (frameCount == 15) {
-      dummyValue1 = Math.floor(random(0, 100));
-      dummyValue2 = Math.floor(random(0, 100));
-      dummyValueGen = dummyValue1 + "," + dummyValue2;
+      phantonValue0 = Math.floor(random(0, 100));
+      phantonValue1 = Math.floor(random(0, 100));
+      phantonValueGen = phantonValue0 + "," + phantonValue1;
     } //end wait
 
-    text("sensor value dummy: " + dummyValueGen, 30, 80);
+    text("Phanton sensor: " + phantonValueGen, 30, 80);
 
-    EMFrawValues = String(dummyValueGen); //needed to create a string object in order to split.
+    EMFrawValues = String(phantonValueGen); //needed to create a string object in order to split.
     // console.log('raw values: ' + EMFrawValues)
     allColumnsEMF = EMFrawValues.split(","); //needed to assign split to another variable
 
@@ -265,6 +255,9 @@ function draw() {
     // console.log("Col No: " + columnNumber + " valor: " + eachColumnEMF[columnNumber]);
 
 
+    displayText();
+
+
   }
 
   /*******************************************************/
@@ -274,13 +267,21 @@ function draw() {
 
 } // END OF DRAW
 
+
+//DISPLAY TEXT
+
+function displayText(){
+
+  
+}
+
 // TEST VOICE
 function mousePressed() {
   // if in bounds:
   // randomize voice and speak word:
   myVoice.setVoice(Math.floor(random(voicesX.length)));
-  myVoice.speak(comodines[iptr]);
-  iptr = (iptr + 1) % comodines.length; // increment
+  myVoice.speak(palabras_clave[iptr]);
+  iptr = (iptr + 1) % palabras_clave.length; // increment
 }
 
 
@@ -325,7 +326,6 @@ function mix_text(fraseRS, columnEMFValue) {
     }
 
     palabraMix = fraseRS.text(); // palabraMix = palabra modificada
-    // console.log("INTERCAMBIO DE CARACTERES: " + palabraMix);
     // console.log("INTERCAMBIO DE CARACTERES: " + fraseRS.replaceChar((fraseRSLength - ran1), fraseRS.charAt(ran2)));
 
 
@@ -334,10 +334,10 @@ function mix_text(fraseRS, columnEMFValue) {
 
   // COMODIN DENTRO DE PALABRA
   if (columnEMFValue >= 50) { // mayor o igual que 50 inserta un comodin dentro de palabraMix 
-    console.log('ENTRA comodin');
-    fraseRS.insertWord(Math.floor(random(5)), comodines[Math.floor(random(0, 11))]);
+    // console.log('ENTRA comodin');
+    fraseRS.insertWord(Math.floor(random(5)), palabras_clave[Math.floor(random(0, 11))]);
     palabraMix = fraseRS.text();
-    console.log('Frase COMODIN: ' + palabraMix);
+    // console.log('Frase COMODIN: ' + palabraMix);
 
     //revisar corte
     if (fraseRSLength > 10) {
@@ -353,30 +353,36 @@ function mix_text(fraseRS, columnEMFValue) {
 
 //MAIN FUNCTION TO MANAGE EMF READING AND TEXT GENERATION
 function leer_columna(columnNumber, columnEMFValue) {
-  fraseRS = new RiString(textos_columnas[txtNumber]); // crea un objeto frase Rita con la frase de la base de datos de las columnas 
+  fraseRS = new RiString(discurso_columnas[txtNumber]); // crea un objeto frase Rita con la frase de la base de datos de las columnas 
 
   //MIX TEXT
-  if (columnEMFValue > 30) { //Si EMF es mayor que 30 entonces..
-    say = mix_text(fraseRS, columnEMFValue); // Say es igual a la frase de las columnas + mix_text?
+  if (columnEMFValue > 30) {
+    sayPalabraMix = mix_text(fraseRS, columnEMFValue); // Say es PalabraMic =  igual a la frase de las columnas + mix_text 
+    // console.log ('SAY: ' + sayPalabraMix);
 
+
+    //***************************** */
     // Velocidad de la voz
     // TODO: AGREGAR ACA INSTANCIA DE FUNCION DE VOZ 
     voiceSpeed = Math.floor(random(30, 200)); // TODO: testear que funcione
-    frase_say = new RiString(say); // Enunca la frase
+    frase_sayRS = new RiString(sayPalabraMix); // 
+    // console.log ('FRASE SAY: ' + frase_sayRS);
+    //***************************** */
+
 
     //Recorte de frase
-    if (frase_say.length() > 100) { //Si la frase a decir es mayor que 100
-      say = frase_say.substring(0, 100); //Recorta la frase
+    if (frase_sayRS.length() > 100) { //Si la frase a decir es mayor que 100
+      sayPalabraMix = frase_sayRS.substring(0, 100); //Recorta la frase
     }
 
     //No uniformidad de la lectura
-    wait = frase_say.length() / 10 * 800; //tiempo para que la lectura no sea monotona = argo de la palabra entre 10*800, para no superponer lecturas.
+    wait = frase_sayRS.length() / 10 * 800; //tiempo para que la lectura no sea monotona = argo de la palabra entre 10*800, para no superponer lecturas.
 
     //console.log(wait);
 
-  } else { // Si el valor es mejor a 30 reseteamos columna
+  } else { // Si el valor es menor a 30 reseteamos columna
     //reset
-    reset_columna(columnNumber);
+    reset_columna(txtNumber);
   }
 
   //PREVIOS SKETCH --> CHANGE TO P5js SPEECH TO TEXT
@@ -390,19 +396,20 @@ function leer_columna(columnNumber, columnEMFValue) {
   // SPEAK EVERY CERTAIN AMOUNT OF TIME
   if (millis() - time >= wait) {
     myVoice.setVoice(Math.floor(random(voicesX.length)));
-    myVoice.speak(say);
-    // TODO: Flata agregarle voice speed
-    console.log("Say after certain time: " + say);
+    myVoice.speak(sayPalabraMix);
+    // ****** TODO: Flata agregarle voice speed
+    // console.log("Say after certain time: " + sayPalabraMix);
     time = millis(); //also update the stored time
   }
 
 } // END LEER COLUMNA
 
 // SAY TEXT ACCORDING TO OUR DATA BASE
-function reset_columna(col) {
-  say = textos_columnas[txtNumber]; // guarda en say una de las frases
+function reset_columna(txtNumber) {
+  sayPalabraMix = discurso_columnas[txtNumber]; // guarda en say una de las frases
+  console.log('RESET column: ' + sayPalabraMix);
   voiceSpeed = 150;
-  wait = int(random(5000, 10000)); // set wait
+  wait = Math.floor(random(5000, 10000)); // set wait
 }
 
 
