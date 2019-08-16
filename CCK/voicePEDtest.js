@@ -62,7 +62,7 @@ let openPort; // no se si funca TODO:TESTEAR
 // TEXTOS
 
 // TODO: testear si funca lo del math floor
-let txt = Math.floor(Math.random(0, 8)); //txt asigna un texto a la lectura en voz alta si los valores son menores a 
+let txtNumber = Math.floor(Math.random(0, 8)); //txtNumber asigna un texto a la lectura en voz alta si los valores son menores a 
 
 let comodines = [ 
     "electromagnético", "claridad", "técnica", "moral", "fábula", "luz", "mesura", "medida", "ciencia", "deber", "responsabilidad"
@@ -81,12 +81,12 @@ let textos_columnas = [
 
 
 //RITA
-let rs = new RiString(); // main object
-let frase = new RiString();
-let frase2 = new RiString();
+// let rs = new RiString(); // main object
+let fraseRS  = new RiString(); // main object
+// let frase2 = new RiString();
 let frase_say = new RiString();
 
-let count; // contador de longitud de palabra, // RENAME TO WordLengthVal
+let fraseRSLength; // contador de longitud de palabra
 
 
 //VOICES
@@ -105,6 +105,8 @@ let say;
 
 function setup() {
 createCanvas(500, 500);
+
+frameRate(15);
 
 // -------------------SERIAL P5js
 
@@ -157,10 +159,10 @@ time2 = millis(); // what evet?
 
 
   /* TESTING PHRASES?
-  frase.removeChar(2);
+  fraseRS.removeChar(2);
    frase.replaceChar(2,"h");
-   frase2 = frase.slice(1,3);
-   frase.replaceFirst(frase2, "cu");
+   frase2 = fraseRS.slice(1,3);
+   fraseRS.replaceFirst(frase2, "cu");
    */
 
 }
@@ -193,11 +195,11 @@ background(0, 50);
 
 // SET A DEFAULT TEXT TO SAY
 if (millis() - time2 >= wait2) {
-  txt = Math.floor(random(0, 8));
-  console.log("UPDATE txt No: " + txt);
+  txtNumber = Math.floor(random(0, 8));
+  console.log("UPDATE txtNumber No: " + txtNumber);
   time2 = millis();//also update the stored time
 }
-//console.log("draw: " + txt);
+//console.log("draw: " + txtNumber);
 
 
   //LECTURA SERIAL
@@ -260,7 +262,7 @@ if (millis() - time2 >= wait2) {
     //LECTURA DE COLUMNAS
     let columnNumber = Math.floor(random(0, 2)); 
     leer_columna(columnNumber, eachColumnEMF[columnNumber]);
-    console.log("Col No: " + columnNumber + " valor: " + eachColumnEMF[columnNumber]);
+    // console.log("Col No: " + columnNumber + " valor: " + eachColumnEMF[columnNumber]);
 
 
   }
@@ -268,7 +270,6 @@ if (millis() - time2 >= wait2) {
 /*******************************************************/
   
 // text("sensor value: " + palabra, 30, 60);
-
 
 
 } // END OF DRAW
@@ -285,60 +286,66 @@ function mousePressed()
 
 
 // cuanto mas campo magnetico menos se entiende
-function mix_text(rs, val) {
+function mix_text(fraseRS, columnEMFValue) {
 //TODO: cambiar rs por fraseRS
   
-    let palabra = "";
-    let cont = rs.length(); // longitud de la palabra
-    //console.log(cont);
+    let palabraMix = "";
+    let fraseRSLength = fraseRS.length(); // longitud de la palabra
+    //console.log(fraseRSLength);
 
     //INSERTA CARACTERES
-    if (val >= 30 && val < 40) {
-      palabra = rs.charAt(cont-1); //Palabra = Elige un caracter = longitud de los caracteres menos 1. 
-    } else 
+    if (columnEMFValue >= 30 && columnEMFValue < 40) {
 
+      //pre-code
+      // palabraMix = fraseRS.charAt(fraseRSLength-1); //palabraMix = Elige un caracter de fraseRS menos 1. 
+
+      //elige random characer
+      palabraMix = fraseRS.charAt(Math.floor(random(1, fraseRSLength-1))); //palabraMix = Elige un caracter de fraseRS menos 1. 
+
+
+      // console.log('CHARACTER: ' + palabraMix + ' , fraseRLsize: ' + fraseRSLength);
+    } 
+    
     //INTERCAMBIA CARACTERES
-    if (val >= 40 && val < 60) { // si el valor es entre 40 y 60, intercambia elementos
-       let ran1 = Math.floor(Math.random(cont)); 
-       let ran2 = Math.floor(Math.random(cont)); 
+
+    else if (columnEMFValue >= 40 && columnEMFValue < 60) { // si el valor es entre 40 y 60, intercambia elementos
+       let ran1 = Math.floor(Math.random(fraseRSLength)); 
+       let ran2 = Math.floor(Math.random(fraseRSLength)); 
 
       if (ran1 != ran2) { // si son distintos intercambio las posiones,  reemplazo uno de los dos
 
-        rs.replaceChar((cont-ran1), rs.charAt(ran2)); //reemplazo (largo de palabra menos random 1, random 2 de la palabra misma)
+        fraseRS.replaceChar((fraseRSLength-ran1), fraseRS.charAt(ran2)); //reemplazo (largo de palabraMix menos random 1, random 2 de la palabra misma)
       }
-      palabra = rs.text(); // palabra = palabra modificada
-      console.log(palabra);
-    //   println(palabra);
+      palabraMix = fraseRS.text(); // palabraMix = palabra modificada
+      // console.log(palabraMix);
 
     }  // --- END INTERCAMBIO CARACTERES 
 
 
     // COMODIN DENTRO DE PALABRA
-    if (val >=50) { // mayor o igual que 50 inserta un comodin dentro de palabra 
-      rs.insertWord( Math.floor(Math.random(5)), comodines[Math.floor(Math.random(5))]);
-      palabra = rs.text();
+    if (columnEMFValue >=50) { // mayor o igual que 50 inserta un comodin dentro de palabraMix 
+      fraseRS.insertWord( Math.floor(Math.random(5)), comodines[Math.floor(Math.random(5))]);
+      palabraMix = fraseRS.text();
 
       //revisar corte
-      if (cont>10) {
-        palabra = rs.substring(0, 9);
+      if (fraseRSLength > 10) {
+        palabraMix = fraseRS.substring(0, 9);
       }
     } // --- END COMODIN DENTRO DE PALABRA  
   
     //console.log(palabra);
   
-    return palabra;
+    return palabraMix;
   }
 
 
   //MAIN FUNCTION TO MANAGE EMF READING AND TEXT GENERATION
-  function leer_columna(col, val){
-    frase = new RiString(textos_columnas[txt]); // frase es igual al texto de una columna al azar
-
-    //TODO: cambiar frase por fraseRS
+  function leer_columna(columnNumber, columnEMFValue){
+    fraseRS = new RiString(textos_columnas[txtNumber]); // crea un objeto frase Rita con la frase de la base de datos de las columnas 
 
    //MIX TEXT
-    if (val > 30) { //Si EMF es mayor que 30 entonces..
-      say = mix_text(frase, val); // Say es igual a la frase de las columnas + mix_text?
+    if (columnEMFValue > 30) { //Si EMF es mayor que 30 entonces..
+      say = mix_text(fraseRS, columnEMFValue); // Say es igual a la frase de las columnas + mix_text?
 
       // Velocidad de la voz
       // TODO: AGREGAR ACA INSTANCIA DE FUNCION DE VOZ 
@@ -357,7 +364,7 @@ function mix_text(rs, val) {
 
     } else {// Si el valor es mejor a 30 reseteamos columna
       //reset
-      reset_columna(col);
+      reset_columna(columnNumber);
     }
   
     //PREVIOS SKETCH --> CHANGE TO P5js SPEECH TO TEXT
@@ -381,7 +388,7 @@ function mix_text(rs, val) {
 
   // SAY TEXT ACCORDING TO OUR DATA BASE
   function reset_columna(col) {
-    say = textos_columnas[txt]; // guarda en say una de las frases
+    say = textos_columnas[txtNumber]; // guarda en say una de las frases
     voiceSpeed = 150;
     wait = int(random(5000, 10000)); // set wait
   }
