@@ -50,10 +50,10 @@ let end = 10; // porque hasta 10?
 let val0;   // valor individual de lectura de EMF de las columnas
 let val1;   // valor individual de lectura de EMF de las columnas
 
-let serialEMF = []; //valor EMF en String (del Serial)
+let EMFrawValues;
 // String serial; //valor EMF en String (del Serial) // pre-code
-
-let valores = []; //valores EMF de ambas columnas // TODO: cambiar por EMFvalue
+let allColumnsEMF = [];
+let eachColumnEMF = [];
 
 let openPort; // no se si funca TODO:TESTEAR
 
@@ -185,7 +185,6 @@ function draw() {
 //TEST SERIAL NON SERIAL
 background(0, 50);
   fill(255);
-  text("sensor value: " + dummyValueGen, 30, 30);
 //   console.log('current string :' + currentString);
 
 
@@ -206,91 +205,66 @@ if (millis() - time2 >= wait2) {
 
   if (serial.available() > 0) {  //this works
     var data = serial.read();
-    ellipse(50,50,data,data); // display para testear que recibimos data
+    // ellipse(50,50,data,data); // display para testear que recibimos data
     console.log('Entro a Lectura serial');
 
-    // NO PUEDO HACER QUE FUNCIONE EL SPLIT DE LOS VALORES DEL SENSOR
-
     // if (serial != null) {
-        // String[] a = split(serial, ',');
 
-      let a = currentString.split(",");
-    //   let b = a.split(",");
-    //   a.push(split(currentString, ','));
+    let arduinoValues = currentString;
 
-    // text("sensor value 1: " + a, 30, 80); //no work
-    // console.log('valores recibidos: ' +  a[0]); // no work
+    text("Arduino Values: " + arduinoValues, 30, 30);
 
+    EMFrawValues = String(arduinoValues);
+    allColumnsEMF = EMFrawValues.split(","); 
 
-    // val0 =int(float(trim(a[0]))); //trim and cast EMF value
-    // //println("Col2: "+val0);
-
-    // val1 =int(float(trim(a[1])));  //trim and cast EMF value
-    // //println("Col3: "+val1);
-
-    valores[0] = val0; // set value inside array values of EMF
-    valores[1] = val1; // set value inside array values of EMF
-    console.log("valores: " + valores[0] + " " + valores[1]);
+    eachColumnEMF[0] = allColumnsEMF[0]; 
+    // console.log("EMFcolumn 0: " + eachColumnEMF[0]);
+    eachColumnEMF[1] = allColumnsEMF[1]; 
+    // console.log("EMFcolumn 1: " + eachColumnEMF[1]);
 
     //LECTURA DE COLUMNAS
-    let columna = int(random(1, 2)); // test posiible error in asigning values in random
-    //change names of values to match column names
-    leer_columna(columna, valores[columna]);
-    //println("col: "+columna);
+    let columnNumber = Math.floor(random(0, 2)); 
+    leer_columna(columnNumber, eachColumnEMF[columnNumber]);
+    console.log("Col No: " + columnNumber + " valor: " + eachColumnEMF[columnNumber]);
+
     // }
 
-    // TEST WITHOUT ARDUINO
+    // -----------------   TEST WITHOUT ARDUINO // AKA PHANTOM COLUMNS
   } else {
 
-        // console.log('Entro a Lectura test');
+        // console.log('Entro a Phantom Columns');
 
 
     waitTest = 500;
 
-    if (millis() - time2 >= waitTest) {
-
+    //TEST
+    if (millis() - time2 >= waitTest) { // create dummy values
       // if (frameCount == 15) {
-
-      //TEST
     dummyValue1 = Math.floor(random(0, 100));
     dummyValue2 = Math.floor(random(0, 100));
-
     dummyValueGen = dummyValue1 + "," + dummyValue2;
-
-
   }  //end wait
 
-    text("sensor value dummy: " + dummyValueGen, 30, 80); //no work
+    text("sensor value dummy: " + dummyValueGen, 30, 80);
 
-    let a = String(dummyValueGen);
-    // let a = '123,909';
-    a = a.split(",");
+    EMFrawValues = String(dummyValueGen); //needed to create a string object in order to split.
+    // console.log('raw values: ' + EMFrawValues)
+    allColumnsEMF = EMFrawValues.split(","); //needed to assign split to another variable
 
-    console.log("val0: " + a[0]);
-
-
-
-    // val0 =trim(a[0]); //trim and cast EMF value
-    // console.log("Col0: " + val0);
-
-    // val1 =int(float(trim(a[1])));  //trim and cast EMF value
-    // //println("Col3: "+val1);
-
-    // valores[0] = val0; // set value inside array values of EMF
-    // valores[1] = val1; // set value inside array values of EMF
-    // console.log("valores: "+valores[0]+" "+valores[1]);
+    eachColumnEMF[0] = allColumnsEMF[0]; 
+    // console.log("EMFcolumn 0: " + eachColumnEMF[0]);
+    
+    eachColumnEMF[1] = allColumnsEMF[1]; 
+    // console.log("EMFcolumn 1: " + eachColumnEMF[1]);
 
     //LECTURA DE COLUMNAS
-    let columna = int(random(1, 2)); // test posiible error in asigning values in random
-    //change names of values to match column names
-    leer_columna(columna, valores[columna]);
-    //println("col: "+columna);
+    let columnNumber = Math.floor(random(0, 2)); 
+    leer_columna(columnNumber, eachColumnEMF[columnNumber]);
+    console.log("Col No: " + columnNumber + " valor: " + eachColumnEMF[columnNumber]);
 
 
   }
 
-
-  
 /*******************************************************/
   
 // text("sensor value: " + palabra, 30, 60);
