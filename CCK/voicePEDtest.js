@@ -1,23 +1,22 @@
-
 // THINGS WE NEED TO RUN THIS 
 
 // 1. python3 
 // 2. node.js 
 // 3. serial comunication 
 
-    // P5js Serial Server or Serial Control GUI Version
+// P5js Serial Server or Serial Control GUI Version
 
-        // p5.serialcontrol (GUI version). 
-        // https://itp.nyu.edu/physcomp/labs/labs-serial-communication/lab-serial-input-to-the-p5-js-ide/
-        // Or 
-        // P5.serialserver (command line version)
-        // sudo npm install -g p5.serialserver
-        // Run = p5serial
+// p5.serialcontrol (GUI version). 
+// https://itp.nyu.edu/physcomp/labs/labs-serial-communication/lab-serial-input-to-the-p5-js-ide/
+// Or 
+// P5.serialserver (command line version)
+// sudo npm install -g p5.serialserver
+// Run = p5serial
 
-     // P5js Serial Port Library for microcontroller
+// P5js Serial Port Library for microcontroller
 
-        // https://github.com/p5-serial/p5.serialport
-        // https://raw.githubusercontent.com/p5-serial/p5.serialport/master/lib/p5.serialport.js
+// https://github.com/p5-serial/p5.serialport
+// https://raw.githubusercontent.com/p5-serial/p5.serialport/master/lib/p5.serialport.js
 
 
 //TO RUN ON MARIO'S COMPUTER
@@ -40,15 +39,15 @@ let wait2 = 5000; //100000 // que mide este valor?
 
 let serial; // variable to hold an instance of the serialport library
 // var portName = '/dev/cu.usbmodem1421';  // fill in your serial port name here
-let portName = '/dev/ttyACM0';  // For linux 
+let portName = '/dev/ttyACM0'; // For linux 
 // Set Arduino on Serial.begin(9600) to nor change the value of baudrate
 // let portName = '10.17.34.128'; // fill in your own IP address in place of the one shown here
-let currentString;  // for incoming serial data
+let currentString; // for incoming serial data
 
 //LECTURA ARDUINO
 let end = 10; // porque hasta 10?
-let val0;   // valor individual de lectura de EMF de las columnas
-let val1;   // valor individual de lectura de EMF de las columnas
+let val0; // valor individual de lectura de EMF de las columnas
+let val1; // valor individual de lectura de EMF de las columnas
 
 let EMFrawValues;
 // String serial; //valor EMF en String (del Serial) // pre-code
@@ -64,26 +63,27 @@ let openPort; // no se si funca TODO:TESTEAR
 // TODO: testear si funca lo del math floor
 let txtNumber = Math.floor(Math.random(0, 8)); //txtNumber asigna un texto a la lectura en voz alta si los valores son menores a 
 
-let comodines = [ 
-    "electromagnético", "claridad", "técnica", "moral", "fábula", "luz", "mesura", "medida", "ciencia", "deber", "responsabilidad"
+let comodines = [
+  "electromagnético", "claridad", "técnica", "moral", "fábula", "luz", "mesura", "medida", "ciencia", "deber", "responsabilidad"
 ];
 
-let textos_columnas = [ 
-  "lo que está en juego son los procedimientos", 
-  "aquellos que están fuera del palacio pueden ver lo que pasa dentro", 
-  "invasión permanente que instituya nuevas formas de hacer", 
-  "mantener abierto el espacio de la institución", 
-  "una superficie total de tres mil metros cuadrados", 
-  "el estilo de los edificios responde al neoclasicismo francés", 
-  "¿Qué es el Neoclasicismo?", 
+let textos_columnas = [
+  "lo que está en juego son los procedimientos",
+  "aquellos que están fuera del palacio pueden ver lo que pasa dentro",
+  "invasión permanente que instituya nuevas formas de hacer",
+  "mantener abierto el espacio de la institución",
+  "una superficie total de tres mil metros cuadrados",
+  "el estilo de los edificios responde al neoclasicismo francés",
+  "¿Qué es el Neoclasicismo?",
   "Cielito, ciclo que sí, digo cese la pendencia, ya reventó la coyunda, y viva la Independencia."
-]; 
+];
 
 
 //RITA
 // let rs = new RiString(); // main object
-let fraseRS  = new RiString(); // main object
+let fraseRS = new RiString(); // main object
 // let frase2 = new RiString();
+// let NewFraseRS;
 let frase_say = new RiString();
 
 let fraseRSLength; // contador de longitud de palabra
@@ -104,17 +104,17 @@ let say;
 
 
 function setup() {
-createCanvas(500, 500);
+  createCanvas(500, 500);
 
-frameRate(15);
+  frameRate(15);
 
-// -------------------SERIAL P5js
+  // -------------------SERIAL P5js
 
   // Instantiate our SerialPort object
   serial = new p5.SerialPort();
 
   // Let's list the ports available
-//   var portlist = serial.list();
+  //   var portlist = serial.list();
 
   // Assuming our Arduino is connected, let's open the connection to it
 
@@ -126,7 +126,7 @@ frameRate(15);
   serial.on('connected', serverConnected);
 
   // When we get a list of serial ports that are available
-//   serial.on('list', gotList);
+  //   serial.on('list', gotList);
 
   // When we some data from the serial port
   serial.on('data', gotData); // prints = currentString
@@ -138,24 +138,24 @@ frameRate(15);
   serial.on('open', gotOpen);
 
 
-// ------------------   SERIAL pre-v
-//CHANGED FOR P5js LIBRARY
+  // ------------------   SERIAL pre-v
+  //CHANGED FOR P5js LIBRARY
 
-//   String portName = Serial.list()[3];
-//   // println(portName);
-//   port = new Serial(this, portName, 9600);
-//   port.clear();  // function from serial library that throws out the first reading, in case we started reading in the middle of a string from Arduino
-//   serial = port.readStringUntil(end); // function that reads the string from serial port until a println and then assigns string to our string variable (called 'serial')
-//   serial = null;
+  //   String portName = Serial.list()[3];
+  //   // println(portName);
+  //   port = new Serial(this, portName, 9600);
+  //   port.clear();  // function from serial library that throws out the first reading, in case we started reading in the middle of a string from Arduino
+  //   serial = port.readStringUntil(end); // function that reads the string from serial port until a println and then assigns string to our string variable (called 'serial')
+  //   serial = null;
 
-//   time = millis();//store the current time
-//   time2 = millis();//store the current time
-// ------------------   END SERIAL pre-v
+  //   time = millis();//store the current time
+  //   time2 = millis();//store the current time
+  // ------------------   END SERIAL pre-v
 
-//TIME // Counter for triggering events
-time = millis(); // what event?
-time2 = millis(); // what evet?
-// console.log('time: ' + time );
+  //TIME // Counter for triggering events
+  time = millis(); // what event?
+  time2 = millis(); // what evet?
+  // console.log('time: ' + time );
 
 
   /* TESTING PHRASES?
@@ -167,45 +167,45 @@ time2 = millis(); // what evet?
 
 }
 
- //TEST
- let dummyValue1;
- let dummyValue2;
- let dummyValueGen;
+//TEST
+let dummyValue1;
+let dummyValue2;
+let dummyValueGen;
 
 
 function draw() {
-// TEST
-// mousePressed(); auto repeat //Iterates in the word array. Test
+  // TEST
+  // mousePressed(); auto repeat //Iterates in the word array. Test
 
-//TEST SERIAL
-// background(0, 50);
-//   fill(255);
-//   text("sensor value: " + currentString, 30, 30);
-//   console.log('current string :' + currentString);
+  //TEST SERIAL
+  // background(0, 50);
+  //   fill(255);
+  //   text("sensor value: " + currentString, 30, 30);
+  //   console.log('current string :' + currentString);
 
 
-//TEST SERIAL NON SERIAL
-background(0, 50);
+  //TEST SERIAL NON SERIAL
+  background(0, 50);
   fill(255);
-//   console.log('current string :' + currentString);
+  //   console.log('current string :' + currentString);
 
 
 
-//PRE-V
+  //PRE-V
 
-// SET A DEFAULT TEXT TO SAY
-if (millis() - time2 >= wait2) {
-  txtNumber = Math.floor(random(0, 8));
-  console.log("UPDATE txtNumber No: " + txtNumber);
-  time2 = millis();//also update the stored time
-}
-//console.log("draw: " + txtNumber);
+  // SET A DEFAULT TEXT TO SAY
+  if (millis() - time2 >= wait2) {
+    txtNumber = Math.floor(random(0, 8));
+    console.log("UPDATE txtNumber No: " + txtNumber);
+    time2 = millis(); //also update the stored time
+  }
+  //console.log("draw: " + txtNumber);
 
 
   //LECTURA SERIAL
   /*******************************************************/
 
-  if (serial.available() > 0) {  //this works
+  if (serial.available() > 0) { //this works
     var data = serial.read();
     // ellipse(50,50,data,data); // display para testear que recibimos data
     console.log('Entro a Lectura serial');
@@ -217,15 +217,15 @@ if (millis() - time2 >= wait2) {
     text("Arduino Values: " + arduinoValues, 30, 30);
 
     EMFrawValues = String(arduinoValues);
-    allColumnsEMF = EMFrawValues.split(","); 
+    allColumnsEMF = EMFrawValues.split(",");
 
-    eachColumnEMF[0] = allColumnsEMF[0]; 
+    eachColumnEMF[0] = allColumnsEMF[0];
     // console.log("EMFcolumn 0: " + eachColumnEMF[0]);
-    eachColumnEMF[1] = allColumnsEMF[1]; 
+    eachColumnEMF[1] = allColumnsEMF[1];
     // console.log("EMFcolumn 1: " + eachColumnEMF[1]);
 
     //LECTURA DE COLUMNAS
-    let columnNumber = Math.floor(random(0, 2)); 
+    let columnNumber = Math.floor(random(0, 2));
     leer_columna(columnNumber, eachColumnEMF[columnNumber]);
     console.log("Col No: " + columnNumber + " valor: " + eachColumnEMF[columnNumber]);
 
@@ -234,7 +234,7 @@ if (millis() - time2 >= wait2) {
     // -----------------   TEST WITHOUT ARDUINO // AKA PHANTOM COLUMNS
   } else {
 
-        // console.log('Entro a Phantom Columns');
+    // console.log('Entro a Phantom Columns');
 
 
     waitTest = 500;
@@ -242,10 +242,10 @@ if (millis() - time2 >= wait2) {
     //TEST
     if (millis() - time2 >= waitTest) { // create dummy values
       // if (frameCount == 15) {
-    dummyValue1 = Math.floor(random(0, 100));
-    dummyValue2 = Math.floor(random(0, 100));
-    dummyValueGen = dummyValue1 + "," + dummyValue2;
-  }  //end wait
+      dummyValue1 = Math.floor(random(0, 100));
+      dummyValue2 = Math.floor(random(0, 100));
+      dummyValueGen = dummyValue1 + "," + dummyValue2;
+    } //end wait
 
     text("sensor value dummy: " + dummyValueGen, 30, 80);
 
@@ -253,172 +253,184 @@ if (millis() - time2 >= wait2) {
     // console.log('raw values: ' + EMFrawValues)
     allColumnsEMF = EMFrawValues.split(","); //needed to assign split to another variable
 
-    eachColumnEMF[0] = allColumnsEMF[0]; 
+    eachColumnEMF[0] = allColumnsEMF[0];
     // console.log("EMFcolumn 0: " + eachColumnEMF[0]);
-    
-    eachColumnEMF[1] = allColumnsEMF[1]; 
+
+    eachColumnEMF[1] = allColumnsEMF[1];
     // console.log("EMFcolumn 1: " + eachColumnEMF[1]);
 
     //LECTURA DE COLUMNAS
-    let columnNumber = Math.floor(random(0, 2)); 
+    let columnNumber = Math.floor(random(0, 2));
     leer_columna(columnNumber, eachColumnEMF[columnNumber]);
     // console.log("Col No: " + columnNumber + " valor: " + eachColumnEMF[columnNumber]);
 
 
   }
 
-/*******************************************************/
-  
-// text("sensor value: " + palabra, 30, 60);
+  /*******************************************************/
+
+  // text("sensor value: " + palabra, 30, 60);
 
 
 } // END OF DRAW
 
 // TEST VOICE
-function mousePressed()
-{
-    // if in bounds:
-        // randomize voice and speak word:
-        myVoice.setVoice(Math.floor(random(voicesX.length)));
-        myVoice.speak(comodines[iptr]);
-        iptr = (iptr+1) % comodines.length; // increment
+function mousePressed() {
+  // if in bounds:
+  // randomize voice and speak word:
+  myVoice.setVoice(Math.floor(random(voicesX.length)));
+  myVoice.speak(comodines[iptr]);
+  iptr = (iptr + 1) % comodines.length; // increment
 }
 
 
 // cuanto mas campo magnetico menos se entiende
 function mix_text(fraseRS, columnEMFValue) {
-//TODO: cambiar rs por fraseRS
-  
-    let palabraMix = "";
-    let fraseRSLength = fraseRS.length(); // longitud de la palabra
-    //console.log(fraseRSLength);
 
-    //INSERTA CARACTERES
-    if (columnEMFValue >= 30 && columnEMFValue < 40) {
+  let palabraMix = String("");
+  let fraseRSLength = fraseRS.length(); // longitud de la palabra
+  //console.log(fraseRSLength);
+  // console.log('FraseRS: ' + fraseRS) // test FraseRS
 
-      //pre-code
-      // palabraMix = fraseRS.charAt(fraseRSLength-1); //palabraMix = Elige un caracter de fraseRS menos 1. 
+  //INSERTA CARACTERES
+  if (columnEMFValue >= 30 && columnEMFValue < 40) { //funciona
+    // console.log('ENTER caracter');
 
-      //elige random characer
-      palabraMix = fraseRS.charAt(Math.floor(random(1, fraseRSLength-1))); //palabraMix = Elige un caracter de fraseRS menos 1. 
+    //pre-code
+    // palabraMix = fraseRS.charAt(fraseRSLength-1); //palabraMix = Elige un caracter de fraseRS menos 1. 
 
+    //elige random characer
+    palabraMix = fraseRS.charAt(Math.floor(random(1, fraseRSLength - 1))); //palabraMix = Elige un caracter de fraseRS menos 1. 
 
-      // console.log('CHARACTER: ' + palabraMix + ' , fraseRLsize: ' + fraseRSLength);
-    } 
-    
-    //INTERCAMBIA CARACTERES
+    // console.log('caracter: ' + palabraMix + ' , fraseRLsize: ' + fraseRSLength);
+  } 
 
-    else if (columnEMFValue >= 40 && columnEMFValue < 60) { // si el valor es entre 40 y 60, intercambia elementos
-       let ran1 = Math.floor(Math.random(fraseRSLength)); 
-       let ran2 = Math.floor(Math.random(fraseRSLength)); 
+  //INTERCAMBIA CARACTERES
 
-      if (ran1 != ran2) { // si son distintos intercambio las posiones,  reemplazo uno de los dos
+  //*****  */TODO: Y SI LO HACEMOS CON LA PALABRA ENTERA?
 
-        fraseRS.replaceChar((fraseRSLength-ran1), fraseRS.charAt(ran2)); //reemplazo (largo de palabraMix menos random 1, random 2 de la palabra misma)
-      }
-      palabraMix = fraseRS.text(); // palabraMix = palabra modificada
-      // console.log(palabraMix);
+  else if (columnEMFValue >= 40 && columnEMFValue < 60) { // si el valor es entre 40 y 60, intercambia elementos
+    // console.log('ENTRA intercabio');
 
-    }  // --- END INTERCAMBIO CARACTERES 
+    var ran1 = Math.floor(random(0, fraseRSLength));
+    var ran2 = Math.floor(random(0, fraseRSLength));
+    // console.log('ran1:  ' + ran1);
+    // console.log('ran2:  ' + ran2);
 
+    if (ran1 != ran2) { // si son distintos intercambio las posiones,  reemplazo uno de los dos
 
-    // COMODIN DENTRO DE PALABRA
-    if (columnEMFValue >=50) { // mayor o igual que 50 inserta un comodin dentro de palabraMix 
-      fraseRS.insertWord( Math.floor(Math.random(5)), comodines[Math.floor(Math.random(5))]);
-      palabraMix = fraseRS.text();
+      // console.log('son diferentes');
 
-      //revisar corte
-      if (fraseRSLength > 10) {
-        palabraMix = fraseRS.substring(0, 9);
-      }
-    } // --- END COMODIN DENTRO DE PALABRA  
-  
-    //console.log(palabra);
-  
-    return palabraMix;
-  }
-
-
-  //MAIN FUNCTION TO MANAGE EMF READING AND TEXT GENERATION
-  function leer_columna(columnNumber, columnEMFValue){
-    fraseRS = new RiString(textos_columnas[txtNumber]); // crea un objeto frase Rita con la frase de la base de datos de las columnas 
-
-   //MIX TEXT
-    if (columnEMFValue > 30) { //Si EMF es mayor que 30 entonces..
-      say = mix_text(fraseRS, columnEMFValue); // Say es igual a la frase de las columnas + mix_text?
-
-      // Velocidad de la voz
-      // TODO: AGREGAR ACA INSTANCIA DE FUNCION DE VOZ 
-      voiceSpeed = Math.floor(Math.random(30, 200)); // TODO: testear que funcione
-      frase_say = new RiString(say); // Enunca la frase
-      
-      //Recorte de frase
-      if (frase_say.length()>100) { //Si la frase a decir es mayor que 100
-        say = frase_say.substring(0, 100); //Recorta la frase
-      }
-
-      //No uniformidad de la lectura
-      wait = frase_say.length()/10 * 800; //tiempo para que la lectura no sea monotona = argo de la palabra entre 10*800, para no superponer lecturas.
-      
-      //console.log(wait);
-
-    } else {// Si el valor es mejor a 30 reseteamos columna
-      //reset
-      reset_columna(columnNumber);
+      palabraMix = fraseRS.replaceChar((fraseRSLength - ran1), fraseRS.charAt(ran2)); //reemplazo (largo de palabraMix menos random 1, random 2 de la palabra misma)
     }
-  
-    //PREVIOS SKETCH --> CHANGE TO P5js SPEECH TO TEXT
-    // if (millis() - time >= wait) {
-    //   TextToSpeech.say(say, TextToSpeech.voices[Math.floor(Math.random(1, 5))], voiceSpeed);
-    //   console.log(say);
-    //   time = millis();//also update the stored time
-    // }
+
+    palabraMix = fraseRS.text(); // palabraMix = palabra modificada
+    // console.log("INTERCAMBIO DE CARACTERES: " + palabraMix);
+    // console.log("INTERCAMBIO DE CARACTERES: " + fraseRS.replaceChar((fraseRSLength - ran1), fraseRS.charAt(ran2)));
 
 
-    // SPEAK EVERY CERTAIN AMOUNT OF TIME
-    if (millis() - time >= wait) {
-        myVoice.setVoice(Math.floor(random(voicesX.length)));
-        myVoice.speak(say);
-        // TODO: Flata agregarle voice speed
-        console.log("speak_amount_time: " + say);
-        time = millis();//also update the stored time
-      }
+  } // --- END INTERCAMBIO CARACTERES 
 
-  } // END LEER COLUMNA
 
-  // SAY TEXT ACCORDING TO OUR DATA BASE
-  function reset_columna(col) {
-    say = textos_columnas[txtNumber]; // guarda en say una de las frases
-    voiceSpeed = 150;
-    wait = int(random(5000, 10000)); // set wait
+  // COMODIN DENTRO DE PALABRA
+  if (columnEMFValue >= 50) { // mayor o igual que 50 inserta un comodin dentro de palabraMix 
+    console.log('ENTRA comodin');
+    fraseRS.insertWord(Math.floor(random(5)), comodines[Math.floor(random(0, 11))]);
+    palabraMix = fraseRS.text();
+    console.log('Frase COMODIN: ' + palabraMix);
+
+    //revisar corte
+    if (fraseRSLength > 10) {
+      palabraMix = fraseRS.substring(0, 9);
+    }
+  } // --- END COMODIN DENTRO DE PALABRA  
+
+  //console.log(palabra);
+
+  return palabraMix;
+}
+
+
+//MAIN FUNCTION TO MANAGE EMF READING AND TEXT GENERATION
+function leer_columna(columnNumber, columnEMFValue) {
+  fraseRS = new RiString(textos_columnas[txtNumber]); // crea un objeto frase Rita con la frase de la base de datos de las columnas 
+
+  //MIX TEXT
+  if (columnEMFValue > 30) { //Si EMF es mayor que 30 entonces..
+    say = mix_text(fraseRS, columnEMFValue); // Say es igual a la frase de las columnas + mix_text?
+
+    // Velocidad de la voz
+    // TODO: AGREGAR ACA INSTANCIA DE FUNCION DE VOZ 
+    voiceSpeed = Math.floor(random(30, 200)); // TODO: testear que funcione
+    frase_say = new RiString(say); // Enunca la frase
+
+    //Recorte de frase
+    if (frase_say.length() > 100) { //Si la frase a decir es mayor que 100
+      say = frase_say.substring(0, 100); //Recorta la frase
+    }
+
+    //No uniformidad de la lectura
+    wait = frase_say.length() / 10 * 800; //tiempo para que la lectura no sea monotona = argo de la palabra entre 10*800, para no superponer lecturas.
+
+    //console.log(wait);
+
+  } else { // Si el valor es mejor a 30 reseteamos columna
+    //reset
+    reset_columna(columnNumber);
   }
 
+  //PREVIOS SKETCH --> CHANGE TO P5js SPEECH TO TEXT
+  // if (millis() - time >= wait) {
+  //   TextToSpeech.say(say, TextToSpeech.voices[Math.floor(Math.random(1, 5))], voiceSpeed);
+  //   console.log(say);
+  //   time = millis();//also update the stored time
+  // }
 
-    // // this sends the "say" command to the terminal with the appropriate args
-    // function say( script,  voice, speed) {
-    //     try {
-    //       Runtime.getRuntime().exec(new String[] {"say", "-v", voice, "[[rate " + speed + "]]" + script});
-    //     }
-    //     catch (IOException e) {
-    //       System.err.println("IOException");
-    //     }
-    //   }
-    
-    //   // Overload the say method so we can call it with fewer arguments and basic defaults
-    //   static void say(String script) {
-    //     // 200 seems like a resonable default speed
-    //     say(script, MONICA, 200);
-    //   }
-    // }
+
+  // SPEAK EVERY CERTAIN AMOUNT OF TIME
+  if (millis() - time >= wait) {
+    myVoice.setVoice(Math.floor(random(voicesX.length)));
+    myVoice.speak(say);
+    // TODO: Flata agregarle voice speed
+    console.log("Say after certain time: " + say);
+    time = millis(); //also update the stored time
+  }
+
+} // END LEER COLUMNA
+
+// SAY TEXT ACCORDING TO OUR DATA BASE
+function reset_columna(col) {
+  say = textos_columnas[txtNumber]; // guarda en say una de las frases
+  voiceSpeed = 150;
+  wait = int(random(5000, 10000)); // set wait
+}
+
+
+// // this sends the "say" command to the terminal with the appropriate args
+// function say( script,  voice, speed) {
+//     try {
+//       Runtime.getRuntime().exec(new String[] {"say", "-v", voice, "[[rate " + speed + "]]" + script});
+//     }
+//     catch (IOException e) {
+//       System.err.println("IOException");
+//     }
+//   }
+
+//   // Overload the say method so we can call it with fewer arguments and basic defaults
+//   static void say(String script) {
+//     // 200 seems like a resonable default speed
+//     say(script, MONICA, 200);
+//   }
+// }
 
 
 
 
 //------ SERIAL PORT FUNCTIONS
- 
+
 // We are connected and ready to go
 function serverConnected() {
-    console.log("We are connected!");
+  console.log("We are connected!");
 }
 
 // Got the list of ports
@@ -432,19 +444,19 @@ function gotList(thelist) {
 
 // There is data available to work with from the serial port
 function gotData() {
-    currentString = serial.readStringUntil("\r\n");
-//   console.log(currentString);
+  currentString = serial.readStringUntil("\r\n");
+  //   console.log(currentString);
 }
 
 // Ut oh, here is an error, let's log it
 function gotError(theerror) {
-    console.log(theerror);
-  }
+  console.log(theerror);
+}
 
-  // Connected to our serial device
+// Connected to our serial device
 function gotOpen() {
-    console.log("Serial Port is open!");
-    var openPort = new Boolean(true);
+  console.log("Serial Port is open!");
+  var openPort = new Boolean(true);
 }
 
 // Methods available
